@@ -1,28 +1,49 @@
 import "./App.css";
+import { useState, useEffect } from "react";
+import InitialContactsList from "../data/initialContactList.json";
 
-import Profile from "./components/Profile/Profile";
-import userData from "./data/userData.json";
+import ContactList from "./components/ContactList/ContactList";
+import SearchBox from "./components/SearchBox/SearchBox";
+import ContactForm from "./components/ContactForm/ContactForm";
 
-import friends from "./data/friends.json";
-import FriendList from "./components/FriendListItem/FriendList";
+export default function App() {
+  const [contacts, setContacts] = useState(() => {
+    const dataContacts = window.localStorage.getItem("savedContacts");
 
-import transactions from "./data/transactions.json";
-import TransactionHistory from "./components/TransactionHistory/TransactionHistory";
+    if (dataContacts !== null) {
+      return JSON.parse(dataContacts);
+    }
+    return InitialContactsList;
+  });
 
-const App = () => {
-  return (
-    <>
-      <Profile
-        name={userData.username}
-        tag={userData.tag}
-        location={userData.location}
-        image={userData.avatar}
-        stats={userData.stats}
-      />
-      <FriendList friends={friends} />
-      <TransactionHistory transactions={transactions} />
-    </>
+  const [filter, setFilter] = useState("");
+
+  useEffect(() => {
+    window.localStorage.setItem("savedContacts", JSON.stringify(contacts));
+  }, [contacts]);
+
+  const addNewContact = (newContact) => {
+    setContacts((prevContacts) => {
+      return [...prevContacts, newContact];
+    });
+  };
+
+  const deleteContact = (contactId) => {
+    setContacts((prevContacts) => {
+      return prevContacts.filter((contact) => contact.id !== contactId);
+    });
+  };
+
+  const filterContacts = contacts.filter((contact) =>
+    contact.name.toLowerCase().includes(filter.toLowerCase())
   );
-};
 
-export default App;
+  return (
+    <div>
+      <h1>Phonebook</h1>
+      <ContactForm onAdd={addNewContact} />
+      <SearchBox value={filter} onFilter={setFilter} />
+      <ContactList contacts={filterContacts} onDelete={deleteContact} />
+    </div>
+  );
+}
