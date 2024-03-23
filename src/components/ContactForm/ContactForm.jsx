@@ -7,12 +7,12 @@ import * as Yup from "yup";
 
 const ContactSchema = Yup.object().shape({
   name: Yup.string()
-    .min(3, "User name must be at least 3 characters long!")
+    .min(2, "User name must be at least 2 characters long!")
     .max(50, "User name must be less 50 characters long!")
     .required("Please, enter your name! This field is required!"),
   number: Yup.string()
     .matches(/^\d{3}-\d{2}-\d{2}$/, {
-      message: "Please, enter the correct phone number: 999-99-99!",
+      message: "Please, enter the correct phone number: 666-666-666!",
       excludeEmptyString: false,
     })
     .required("Please, enter your phone number! This field is required!"),
@@ -45,7 +45,7 @@ const ContactForm = ({ onAdd }) => {
             className={css.input}
             type="text"
             name="name"
-            placeholder="Jack Wilson"
+            placeholder="John Wick"
             id={nameFieldId}
           />
           <ErrorMessage className={css.error} name="name" component="div" />
@@ -57,7 +57,7 @@ const ContactForm = ({ onAdd }) => {
             className={css.input}
             type="tel"
             name="number"
-            placeholder="999-99-99"
+            placeholder="666-666-666"
             id={numberFieldId}
           />
           <ErrorMessage className={css.error} name="number" component="div" />
